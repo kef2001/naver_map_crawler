@@ -6,7 +6,19 @@ import pandas as pd
 import time
 import json
 
-headers = {'accept':'application/json, text/plain,*/*','referer':'https://map.naver.com/','user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Whale/2.9.115.16 Safari/537.36','accept-encoding':'gzip, deflate, br','accept-language':'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7','sec-fetch-dest':'empty','sec-fetch-mode':'cors','sec-fetch-site':'same-origin'}
+headers = {'accept': 'application/json, text/plain, */*',
+'accept-encoding': 'gzip, deflate, br',
+'accept-language': 'ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4',
+'cache-control': 'no-cache',
+'content-type': 'application/json',
+'pragma': 'no-cache',
+'referer': 'https://map.naver.com/',
+'sec-ch-ua': '"Chromium";v="86", "\"Not\\A;Brand";v="99", "Whale";v="2"',
+'sec-ch-ua-mobile': '?0',
+'sec-fetch-dest': 'empty',
+'sec-fetch-mode': 'cors',
+'sec-fetch-site': 'same-origin',
+'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Whale/2.9.115.16 Safari/537.36'}
 s = requests.Session()
 
 def getQuery(search,page):
@@ -48,7 +60,7 @@ def getRequests(text):
         for j in secondjson['result']['place']['list']:
             info[j['name']] = {'id':j['id'],'storename':j['name'],'category':j['category'][0],'reviewCount':j['reviewCount'],\
             'hasNaverBooking':j['hasNaverBooking'],'roadAddress':j['roadAddress'],'address':j['address'],'tel':j['tel'],'score':0}
-        time.sleep(0.1) # 너무 빠른 속도로 차단당하지 않기 위해 일정 간격을 둠
+        time.sleep(0.3) # 너무 빠른 속도로 차단당하지 않기 위해 일정 간격을 둠
         
         print(i,' 페이지 추출중')
 
@@ -57,7 +69,7 @@ def getRequests(text):
             detailurl = f'https://map.naver.com/v5/api/sites/detail/{storeid}?lang=ko'
             info[i]['detailurl'] = detailurl
         
-        pool = Pool(processes = 3)
+        pool = Pool(processes = 2)
         result = []
         result = pool.map(getDetail, info.values())
         pool.close()
